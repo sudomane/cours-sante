@@ -1,0 +1,118 @@
+Ex1: Etudier le pb de Cauchy:
+(E) {y'(t) = 3y(t)
+    {y(t0) = y0 != 0
+
+y != 0
+y'(t) = 3y(t)
+dy/dt = 3y
+dy/y = 3dt
+On primitive:
+ln|y(t)| = 3t + c
+y(t) = C exp(3t)
+CI: y(t) = y0exp(3(t - t0))
+
+Ex2:
+(E) {y'(t) = y²(t) dans [0;1]
+    {y(0) = 1
+y != 0
+y'(t) = y²(t)
+dy/dt = y²
+dy/y² = dt
+On primitive:
+-1/y = t + c
+y = -1/(t+c)
+CI: y(0) = 1 = -1/c donc c = -1
+y(t) = 1/(1-t)
+non définie en 1
+Donc pas correct
+
+Ex3:
+(E) {y'(t) = exp(-y(t))cos(t)
+    {y(0) = 0
+dy/dt = exp(-y)cos(t)
+exp(y)dy = cos(t)dt
+On primitive:
+exp(y) = sin(t) + c
+y = ln(c + sin(t))
+CI: y(0) = 0 = ln(c) donc c = 1
+y(t) = ln(1 + sin(t))
+avec sin != -1
+
+Ex4:
+(E) {y'(t) = 5/4 y^(1/5) 
+    {y(0) = 0
+y = 0  est solution
+y != 0
+dy/dt = 5/4 y^(1/5)
+dy/y^(1/5) = 5/4 dt
+On primitive:
+(5/4)y^(4/5) = 5/4 t + c
+y^(4/5) = t + (4/5)c
+y = (t + 4c/5)^(5/4)
+CI: y(0) = 0 = (4c/5)^(5/4) Donc c = 0
+y(t) = t^(5/4)
+On peut prendre ensuite les fonctions avec a >= 0:
+y(t) = {0 si t <= a
+	 {(t-a)^(5/4) sinon
+Donc il existe une infinité de solutions
+
+Ex5:
+(E) {y'(t) = y(t)(y(t)-1)(t+1)
+    {y(0) = 2
+y != 0 et y != 1
+dy/dt = y(y-1)(t+1)
+dy/(y(y-1)) = t+1 dt
+On primitive: avec décomposition en elt simples
+1/(y(y-1)) = a/y + b/(y-1)
+a = -1, b = 1
+Donc dy/(y(y-1)) = (-dy/y) + (dy/(y-1))
+-ln|y| + ln|y-1| = t²/2 + t + c
+ln|(y-1)/y| = t²/2 + t + c
+(y-1)/y = C exp(t²/2 + t)
+y-1 = Cy exp(t²/2+t)
+CI: 1 = 2C donc C = 1/2
+1 =y - 1/2 y exp(t²/2+t)
+y(1 - 1/2 exp(t²/2+t)) = 1
+y = 1/(1-1/2 exp(t²/2+t))
+
+
+
+				COURS
+
+
+erreur de consistance:
+en = Z(tn+1) - yn+1
+en = Z(tn + hn) - somme(1/k! hn^k Z^(k)(tn))
+		     0<=k<=p
+en = 1/(p+1)! hn^(p+1) f^[p](tn, yn) + o(hn^(p+1))
+
+On dira qu'une méthode est d'ordre p si l'erreur de consistance est en hn^(p+1)
+Rq: La méthode Euler est d'ordre p=1
+Rq: La méthode Taylor présente 2 inconvénients: (p >= 3)
+	(i)  Calcul des quantités f^[k] est complexe et très couteux en temps machine
+	(ii) La méthode suppose que f soit très régulière (toutes les dérivées sont C0)
+
+3) Méthode du point milieu:
+(1) Z(t+h) ~= Z(t) + hZ'(t+h/2) (Z(t): sol exacte)
+
+Si Z est C3:
+Taylor
+Z(t+h) = Z(t) + hZ'(t) + h²/2 Z"(t) + (h^3)/6 Z'"(t) + o(h^3)
+Z'(t+h/2) = Z'(t) + h/2 Z"(t) + h²/8 Z'"(t) + o(h²)
+hZ'(t+h/2) = hZ'(t) + h²/2 Z"(t) + (h^3)/8 Z'"(t) + o(h^3)
+
+Donc Z(t+h) - Z(t) - hZ'(t+h/2) = (h^3)/24 Z'"(t) + o(h^3)
+
+Z'(t+h/2) = f(t + h2, Z(t+h/2))
+Z(t+h/2) ~= Z(t) + h/2 Z'(t)
+	   ~= Z(t) + hf(t, Z(t))
+
+Z(t+h) = Z(t) + hf(t+h/2, Z(t) + h/2 f(t, Z(t))) remplacement dans (1)
+
+L'algorithme du point milieu:
+{yn+1/2 = yn + hn /2 f(tn, yn)
+{Pn = fn(tn + hn /2, yn+1/2)  (Pente)
+{yn+1 = yn + hnPn
+{tn+1 = tn + hn
+
+La méthode du point milieu est d'ordre 2 (meilleur que Euler)

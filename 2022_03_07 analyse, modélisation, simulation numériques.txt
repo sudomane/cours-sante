@@ -1,0 +1,144 @@
+III. Etude générale des méthodes à un pas
+Les méthodes à un pas sont les méthodes de résolution numériques qui peuvent s'écrire sous la forme:
+yn+1 = yn + hn Phi(tn, yn, hn) où
+Phi: [t0; t0 + T] x |R x |R -> |R
+              (t, y, h)    |-> Phi(y, t, h)
+Phi est supposée continue
+- Euler: Phi(tn, yn, hn) = f(tn, yn)
+- Méthode du point milieu: Phi(tn, yn, hn) = f(t + h/2, y + h/2 f(t, y))
+
+Déf: L'erreur de consistance en relative à une solution exacte (y' = f(t, y(t)    y(t0) = y0) est
+en = Z(tn+1) - yn+1, 0 <= n <= N avec yn = Z(tn) et Z(t) est une solution exacte
+
+en = Z(tn+1) - Z(tn) - hn Phi(tn, Z(tn), hn)
+
+Déf: On dit que la méthode est consistante si pour toute solution exacte Z, la somme des erreurs de consistance
+ Somme|en| tend vers 0 quand hmax tend vers 0 (hmax = max(hn))
+O<=n<=N
+
+Une autre notion fondamentale est la stabilité
+Dans la pratique, le calcul récurrent de la suite yn est entaché d'erreurs d'arrondi eps n
+Pour que les calculs soient significatifs, il est indispensable que la propagation des erreurs d'arrondi reste
+contrôlable
+
+Def: On dit qu'une méthode est stable si il existe une constante S positive (constante de stabilité) tel que
+pour toute suite yn et ~yn définie par:
+yn+1 = yn + hn Phi(tn, yn, hn)
+~yn+1 = ~yn + hn Phi(tn, ~yn, hn) + eps n
+on ait: max|~yn - yn| <= S(|~y0 - y0| + Somme|eps n|)
+      0<=n<=N                            0<=n<=N
+Une petite erreur initiale |~y0 - y0| et de petites erreurs d'arrondi eps n dans le calcul provoquent une erreur
+finale max|~yn - yn| contrôlable
+
+Def: On dit qu'une méthode est convergente si pour toute solution exacte Z, la suite yn définie par
+yn+1 = yn + hn Phi(tn, yn, hn)
+vérifie max|yn-Z(tn)| --> 0     (Erreur globale)
+      0<=n<=N
+quand y0-->Z(t0) et hmax-->0
+
+Calcul de l'erreur globale
+~yn = Z(tn)  ~yn+1 = ~yn + hn Phi(tn, ~yn, hn) + en
+Si la méthode est stable:
+  max|yn-Z(tn)| <= S(|y0-Z(t0)| + Somme|en|)     (droite tend vers 0 car CI et gauche tend vers 0 si consistante)
+0<=n<=N                            0<=n<=N
+
+=> max|yn-Z(tn)| --> 0 quand hmax-->0 et y0-->Z(t0)
+
+	Théorème: Si la méthode est stable et consistante alors elle est convergente
+
+	Théorème: La méthode à un pas définie par la fonction Phi ssi
+pour tout (t, y) dans [t0, t0 + T] x |R, Phi(t, y, 0) = f(t, y)
+
+Exemple:
+Méthoe d'Euler yn+1 = yn + hn f(tn, yn)
+Phi(t, y, h) = f(t, y)
+Donc OK
+
+Méthode du point milieu
+Phi(t, y, h) = f(t + h/2, y + h/2 f(t, y))
+Donc OK
+
+	Théorème: Pour que la méthode numérique soit stable, il suffit que Phi soit lipschitzienne en y
+Il existe K positive tel que pour tout t dans [t0, t0 + T], pour tout (y1, y2) dans |R², pour tout k dans |R,
+|Phi(t, y1, h) - Phi(t, y2, h)| <= K|y1 - y2|
+Constante de stabilité S = exp(KT)
+
+Démonstration:
+{yn+1 = yn + hn Phi(tn, yn, hn)
+{~yn+1 = ~yn + hn Phi(tn, ~yn, hn) + eps n
+|~yn+1 - yn+1| <= |~yn - yn| + hn |Phi(tn, ~yn, hn) - Phi(tn, yn, hn)| + |eps n|
+		  <= |~yn - yn| + hn K|~yn - yn| + |eps n|
+|~yn+1 - yn+1| <= (1 + hn K)|~yn - yn| + |eps n|
+
+Lemme de GRONWALL: Soient des suites hn, Théta n positives et eps n dans |R
+telles que Théta n+1 <= (1 + K hn)Théta n + |eps n|
+alors Théta n <= exp(K(t - t0)) Théta 0 + Somme(exp(K(tn - tn+1)|eps i|)
+                                        0<=i<=n-1
+Démonstration (par récurrence, ca marche avec 1+X <= exp(X))
+
+Posons Théta n = |yn - ~yn| et tn - t0<= T, tn - ti+1 <= T
+  max(Théta n) <= exp(KT) (Théta 0 + Somme|eps n|)
+0<=n<=N                             0<=n<=N
+
+Donc S = exp(KT): constante de stabilité
+
+Def: On dit qu'une méthode à un pas d'ordre >= p si pour toute solution exacte Z de
+(E) {y' = f(t, y)
+    {y(t0) = y0
+Il existe C >= 0 telle que |en| <= C hn^(p+1)    0<=n<=N
+
+	Théorème: La méthode est d'ordre >= p ssi
+d^i Phi/dh^i (t, y, 0) = 1/(i+1) f^[i] (t, y)     (dérivées partielles)
+avec 0 <= i <= p-1
+
+Remarque: max|yn - Z(tn)| <= S(|y0-Z(t0)| + Somme|eps n|)
+	 0<=n<=N		<= S(|y0-Z(t0)| + Somme(C hn^(p+1))
+						    0<=n<=N
+				<= SCT hmax^p    si y0 = Z(t0)
+
+p = 3 (ordre 3)	}
+SCT <= 10²		} => max|yn-Z(tn)| <= 10^-4
+hmax = 10^-2		}
+
+Exercice: a dans |R, T dans R|*+, f:|R+ x |R --> |R, f C1 et |f(t, x) - f(t, y)| <= L|x - y| pour tout t dans |R+
+(E) {y' = f(t, y)    t dans [0, T]
+    {y(0) = a
+    {h = T/N    tn = nh
+
+On considère le schéma suivant:
+{y0 = a
+{Zn = yn + hf(tn, yn)
+{yn+1 = yn + h(alpha f(tn+1, yn) + béta(f(tn, Zn))    alpha, béta dans |R²
+
+1) Mettre ce schéma sous forme canonique
+forme canonique: yn+1 = yn + h Phi(tn, yn, hn)
+yn+1 = yn + h(alpha f(tn+1, yn) + béta(f(tn, yn + hf(tn, yn)))
+Phi(t, y, h) = alpha f(t + h, y) + béta(f(t, y + hf(t, y))
+
+2) Montrer que la méthode est stable pour tout alpha, béta
+Il suffit de montrer que Phi est lipschitzienne par rapport à y
+|Phi(t, y, h) - Phi(t, z, h)|
+    <= |alpha f(t + h, y) + béta(f(t, y + hf(t, y)) - alpha f(t + h, z) - béta(f(t, z + hf(t, z))|
+    <= |alpha| |f(t + h, y) - f(t + h, z)| + |béta| |f(t, y + hf(t, y)) - f(t, z + hf(t, z)|
+    <= L|alpha| |y - z| + |béta| |y + hf(t, y) - z - hf(t, z)|
+    <= L|alpha| |y - z| + |béta| |y - z| + h|L(y - z)|
+    <= (L|alpha| + (1 + hL) |béta|) |y - z|
+    <= (L|alpha| + (1 + TL) |béta|) |y - z|
+Donc Phi est lipschitzienne par rapport à y
+
+3) Déterminer alpha, béta pour que la méthode soit convergente
+La méthode est consistante ssi Phi(t , y, 0) = f(t, y)
+Phi(t, y, 0) = f(t, y) (alpha + béta)
+Donc ssi alpha + béta = 1
+La méthode étant stable et consistante (avec la condition alpha + béta = 1) alors elle est convergente
+
+4) Déterminer alpha, béta pour que la méthode soit au moins d'ordre 2
+La méthode est d'ordre au moins p ssi d^i Phi/dh^i (t, y, 0) = 1/(i+1) f^[i] (t, y)     O <= i <= p-1 (d ronds)
+Si la méthode est consistante alors elle est au moins d'ordre 1 si alpha + béta = 1
+
+d Phi/dh (t, y, h) = alpha(df/dt (t+h, y)) + béta(df/dy (t, y+h(f(t, y))) f(t, y))
+d Phi/dh (t, y, 0) = alpha(df/dt (t, y)) + béta(df/dy (t, y) f(t, y))
+La méthode est au moins d'ordre 2 ssi
+d Phi/dh (t, y, 0) = 1/2 f^[1] (t, y)
+                   = 1/2(df/dt (t, y) + df/dt (t, y)f)    (le f sort car y' = f selon la def de y)
+Donc ssi alpha = béta = 1/2

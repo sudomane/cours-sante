@@ -1,0 +1,161 @@
+		m.regragui@noos.fr
+
+	Intro
+Problème de Cauchy:
+{y'(t) = f(t, y(t))  Pour tout t dans I0
+{y(t0) = y0
+
+Soit z(t) sol exacte tel que yn ~= z(tn)
+h=1/N --> 0 quand N--> + infini
+max |yn - z(tn)| --> 0 quand h --> 0
+
+equation de poisson (de laplace si f = 0):
+{Laplacien(u) = f sur u(x) Omega dans |R^n (Omega ouvert) X dans Omega
+{u restreint à I = g donnée
+
+Laplacien : somme des différentielles secondes
+(somme de 1 à n des d2u/dxi2) (d rond)
+
+Méthode des différences finies:
+(P) ~= (Pk)      <=> Auk = bk
+problème discret     système linéaire
+
+{du/dt - laplacien(u) = f (d rond)
+{conditions initiales et conditions aux limites
+
+	Résolution numérique des eq diff et eq aux dérivées partielles (EDP)
+I. Pb de Cauchy
+Soit I0 un intervalle de |R non réduit à 1 pt
+t0 fixé dans I0
+Soit f une fonction définie et C0 sur I0 x |R^m  --> |R^m
+						  (t x y)   |--> f(t,y)
+
+On cherche une fonction y C0 et dérivable sur I0 tq
+(E) {y'(t) = f(t,y(t)) Pour tout t dans I0
+    {y(t0) = y0
+Ce problème s'appelle problème de Cauchy, y0: CI
+
+y = (y1, y2, ..., ym)	f = (f1, f2, ..., fm)
+
+(1) {y1'(t) = f1(t, y1(t), ..., ym(t))
+    {y2'(t) = f2(t, y1(t), ..., ym(t))
+    ...
+    {ym'(t) = fm(t, y1(t), ..., ym(t))
+(S): système différentiel
+
+Considérons un pb différentiel d'ordre p:
+y^(p) (t) = Phi(t, y'(t), y"(t), ..., y^(p) (t)); t dans I0
+Posons z1(t) = y(t), z2(t) = y'(t), ..., zp = y^(p-1) (t)
+
+(1) <=> {z1'(t) = z2
+	  {z2'(t) = z3
+	  ...
+	  {zp-1'(t) = zp
+	  {zp' = Phi(t, z1, ..., zp)
+	  
+Posons Z = transposée(z1, z2, ..., zp)
+
+(1) <=> Z'(t) = F(t, Z) = transposée(z2, 3, ..., zp, Phi(t, z1, ..., zp))
+La CI: Z(t0) = (y(t0), y'(t0), ..., y^(p-1) (t0))
+Problème de Cauchy
+
+		THEOREME DE CAUCHY-LIPSCHITZ
+	Si f: U --> |R^m, U ouvert de |R x |R^m
+	localement lipschitzienne par rapport à y (y dans |R^m)
+	Alors le problème de Cauchy avec CI (t0, y0) admet une solution unique
+
+Lipschitzienne:
+Il existe k >= 0, Pour tout (t, y1), (t, y2) dans Voisinage(t0, y0)
+			|| f(t, y1) - f(t, y2)|| =< k ||y1-y2||
+
+Si f est C1 au voisinage de y0 = y(t0), f est localement lipschitzienne
+
+	Ex: Montrer que le pb de Cauchy donné par:
+{y' = 3y^2/3
+{y(0) = 0
+admet une infinité de solutions
+
+y = 0 est une solution
+y!= 0:
+y' = 3y^2/3
+dy/dt = 3y^2/3
+dy/(y^2/3) = 3dt
+On primitive:
+3y^1/3 = 3t + c
+Donc y^1/3 = t + c'
+y(0) = 0 donc c' = 0
+Donc y = t^3
+
+a < 0 < b
+y(t) = {(t-a)^3	t < a
+	 {(t-b)^3	t < b
+	 {0		a <= t <= b
+
+Donc il existe une infinité de solutions
+explication: f(t, y) = 3y^2/3 n'est pas de classe C1 au voisinage de y0 = 0
+
+	Ex: Etudier le problème de Cauchy
+{y'(t) = -2ty²(t) t dans |R
+{y(0) = 1
+
+y != 0
+dy/dt = -2ty²(t)
+-dy/y² = 2tdt
+On primitive:
+1/y = t² + c
+y = 1/(t² + c)
+CI: c = 1
+Donc y(t) = 1/(t² + 1) Pour tout t dans |R
+--> solution globale
+
+	II. Méthodes numériques à 1 pas
+(E) {y'(t) = f(t, y(t))
+    {y(t0) = y0
+f: [t0, t0+T] x |R --> |R
+
+Etant donnée une subdivision: t0 < t1 < t2 < ... < tN = t0 + T
+on cherche à déterminer les valeurs approchées y0, y1, y2, ..., yN
+des valeurs y(tn): yn ~= y(tn)
+
+soit hn = tn+1 - tn le pas, 0 <=  n <= N-1
+hmax = max(hn)
+
+1) Méthode d'Euler
+Soit Z(t) une solution exacte de (E)
+Z(tn+1) = Z(tn+hn) ~= Z(tn) + hn Z'(tn)
+			   (au premier ordre)
+Z(tn+1) ~= Z(tn) + hn f(tn, Z(tn))
+
+D'où l'algo :
+{yn+1 = yn + hn f(tn, yn)
+{tn+1 = tn + hn
+
+erreur de consistance: en = Z(tn+1) - yn+1 en supposant que yn = Z(tn)
+en = Z(tn + hn) - Z(tn) - hn Z'(tn)
+   = 1/2 hn² Z"(tn) + o(hn²) (taylor à l'ordre 2)
+
+Z'(t) = f(t, Z(t))
+Z"(t) = df/dt (t, Z(t)) + df/dz (t, Z(t)) Z'(t)
+
+Z"(t) = f't(t, Z) + f'z(t, Z)f(t, Z)
+Z"(t) = f^[1] (t, Z)
+avec f^[1] = f't + f'z f(t, Z)
+
+de manière générale: z^(k) (t) = f^[k-1] (t, z)
+avec f^[0] = f, f^[k] = (f^[k-1])'t + (f^[k-1])'z f
+
+en = 1/2 hn² f^[1] (tn, yn) + o(hn²)
+
+2) Méthode de taylor d'ordre p
+
+Supposons que f C^p, alors Z est C^p+1
+et Z^(k) (t) = f^[k-1] (t, Z(t))
+
+Formule de Taylor à l'ordre p:
+Z(tn + hn) = Z(tn) + somme(1/k! hn^k f^[k-1] (tn , Z(tn))) + o(hn^p)
+			  1<=k<=p
+
+D'où l'algo:
+{yn+1 = yn + somme(1/k! hn^k f^[k-1] (tn, yn))
+	      1<=k<=p
+{tn+1 = tn + hn
